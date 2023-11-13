@@ -1,0 +1,149 @@
+body {
+  background-color: gainsboro;
+  font-family: 'Arial', sans-serif;
+}
+
+.header {
+  text-align: center;
+  padding: 20px;
+  font-family: 'Helvetica', sans-serif;
+}
+
+.header h1 {
+  font-size: 24px;
+}
+
+.header p {
+  font-size: 16px;
+}
+
+.game-board-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 2em;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(10, 30px);
+  grid-template-rows: repeat(20, 30px);
+  grid-gap: 1px;
+  background-color: #000;
+  border: 1px solid #333;
+  justify-content: center;
+}
+
+.row {
+  display: contents;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  background-color: #333;
+  border: 1px solid #555;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.current-piece {
+  display: grid;
+  grid-template-columns: repeat(4, 30px);
+  grid-template-rows: repeat(4, 30px);
+  grid-gap: 1px;
+  background-color: transparent;
+}
+
+.piece-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.piece-cell {
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: 1px solid #555;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.start-button {
+  background-color: #0074D9;
+  color: #FFF;
+  font-size: 24px;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 1em;
+  cursor: pointer;
+}
+
+.score-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: gainsboro;
+}
+
+.score {
+  font-size: 24px;
+  color: #333;
+  font-weight: bold;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 32px;
+  color: #777;
+}
+
+.modal {
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  z-index: 1000;
+  width: 20em;
+  height: 15em;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal button {
+  background-color: #0074D9;
+  color: #FFF;
+  font-size: 24px;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.overlay.hidden {
+  display: none;
+}
