@@ -35,6 +35,21 @@ const Tetris = () => {
     return () => cancelAnimationFrame(requestId);
   }, [gameState, dispatch]);
 
+  const renderStartButton = () => (
+    <div className="button-container">
+      <StartButton onStartClick={handleStartClick(dispatch)} />
+    </div>
+  );
+
+  const renderGameOverModal = () => (
+    <GameOverModal
+      score={gameState.lastScore}
+      onRestartClick={handleRestartClick(dispatch, setShowGameOverModal)}
+      onCloseClick={handleCloseClick(setShowGameOverModal)}
+      isModalOpen={showGameOverModal}
+    />
+  );
+
   return (
     <div className="main-container">
       <Header />
@@ -44,11 +59,7 @@ const Tetris = () => {
           {' '}
           {gameState.score}
         </div>
-        {gameState.started ? null : (
-          <div className="button-container">
-            <StartButton onStartClick={handleStartClick(dispatch)} />
-          </div>
-        )}
+        {gameState.started ? null : renderStartButton()}
       </div>
       <div className="game-board-container">
         <GameBoard
@@ -62,14 +73,7 @@ const Tetris = () => {
           />
         </GameBoard>
       </div>
-      {gameState.gameIsOver && (
-        <GameOverModal
-          score={gameState.lastScore}
-          onRestartClick={handleRestartClick(dispatch, setShowGameOverModal)}
-          onCloseClick={handleCloseClick(setShowGameOverModal)}
-          isModalOpen={showGameOverModal}
-        />
-      )}
+      {gameState.gameIsOver && renderGameOverModal()}
       <Controls gameState={gameState} dispatch={dispatch} sounds={sounds} />
     </div>
   );
