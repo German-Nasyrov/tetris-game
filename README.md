@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+# Tetris
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## System requirments:
 
-## Available Scripts
+```sh
+• Node-version: [16.x, 17.x, 18.x]
 
-In the project directory, you can run:
+• React: 18.x
 
-### `npm start`
+• Stable internet connection
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+• Internet browser except Internet Explorer
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### build tests and maintainability:
+[![Build check](https://github.com/OGGera/tetris-game/workflows/build-check/badge.svg)](https://github.com/OGGera/tetris-game/actions)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5cd3fb9fed4d7ae5d98e/maintainability)](https://codeclimate.com/github/OGGera/tetris-game/maintainability)
 
-### `npm test`
+## Description:
+This application is a Tetris game.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Made with the help of:
 
-### `npm run build`
+```sh
+• React/Redux
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+• react-bootstrap
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+• randomcolor
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+• lodash
+```
 
-### `npm run eject`
+## Some features:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```sh
+• You can control the position of the shapes using the arrow up, arrow down, arrow left and arrow right buttons
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Installation:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```sh
+All commands should run from root:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Install the dependencies and run build
+$ make install
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Start frontend and backend in root folder
+$ make start
+```
