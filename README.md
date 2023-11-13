@@ -13,7 +13,7 @@
 ```
 
 ### build tests and maintainability:
-[![Build check](https://github.com/OGGera/tetris-game/workflows/build-check/badge.svg)](https://github.com/OGGera/tetris-game/actions)
+![Build check](https://github.com/OGGera/tetris-game/workflows/build-check.yml/badge.svg)
 [![Maintainability](https://api.codeclimate.com/v1/badges/5cd3fb9fed4d7ae5d98e/maintainability)](https://codeclimate.com/github/OGGera/tetris-game/maintainability)
 
 ## Description:
