@@ -14,6 +14,21 @@ import moveSound from '../sounds/move.mp3';
 import rotateSound from '../sounds/rotate.mp3';
 import dropSound from '../sounds/drop.mp3';
 
+const ScoreDisplay = ({ score, started, dispatch }) => (
+  <div className="score-container">
+    <div className="score">
+      Score:
+      {' '}
+      {score}
+    </div>
+    {!started && (
+      <div className="button-container">
+        <StartButton onStartClick={handleStartClick(dispatch)} />
+      </div>
+    )}
+  </div>
+);
+
 const Tetris = () => {
   const dispatch = useDispatch();
   const gameState = useSelector((state) => state.game);
@@ -35,32 +50,10 @@ const Tetris = () => {
     return () => cancelAnimationFrame(requestId);
   }, [gameState, dispatch]);
 
-  const renderStartButton = () => (
-    <div className="button-container">
-      <StartButton onStartClick={handleStartClick(dispatch)} />
-    </div>
-  );
-
-  const renderGameOverModal = () => (
-    <GameOverModal
-      score={gameState.lastScore}
-      onRestartClick={handleRestartClick(dispatch, setShowGameOverModal)}
-      onCloseClick={handleCloseClick(setShowGameOverModal)}
-      isModalOpen={showGameOverModal}
-    />
-  );
-
   return (
     <div className="main-container">
       <Header />
-      <div className="score-container">
-        <div className="score">
-          Score:
-          {' '}
-          {gameState.score}
-        </div>
-        {gameState.started ? null : renderStartButton()}
-      </div>
+      <ScoreDisplay score={gameState.score} started={gameState.started} dispatch={dispatch} />
       <div className="game-board-container">
         <GameBoard
           board={gameState.board}
@@ -73,7 +66,14 @@ const Tetris = () => {
           />
         </GameBoard>
       </div>
-      {gameState.gameIsOver && renderGameOverModal()}
+      {gameState.gameIsOver && (
+        <GameOverModal
+          score={gameState.lastScore}
+          onRestartClick={handleRestartClick(dispatch, setShowGameOverModal)}
+          onCloseClick={handleCloseClick(setShowGameOverModal)}
+          isModalOpen={showGameOverModal}
+        />
+      )}
       <Controls gameState={gameState} dispatch={dispatch} sounds={sounds} />
     </div>
   );

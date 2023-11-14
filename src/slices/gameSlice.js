@@ -58,7 +58,9 @@ const gameSlice = createSlice({
       return { ...state, currentPiece: { ...currentOrientation, shape: newPiece } };
     },
     dropPiece: (state) => {
-      if (!state.started || !state.currentPiece) return state;
+      if (!state.started || !state.currentPiece) {
+        return state;
+      }
 
       const newPosition = { ...state.piecePosition, row: state.piecePosition.row + 1 };
 
@@ -66,7 +68,9 @@ const gameSlice = createSlice({
         return { ...state, piecePosition: newPosition };
       }
 
-      const { newBoard, removedRows, newScore } = processDrop(
+      const {
+        newBoard, removedRows, newScore,
+      } = processDrop(
         state.board,
         state.currentPiece.shape,
         state.piecePosition,
@@ -77,9 +81,18 @@ const gameSlice = createSlice({
       const newPiece = getRandomTetromino(false);
       const { startRow, startCol } = newPiece;
 
-      if (!isValidMove(newBoard, newPiece.shape, { row: startRow, col: startCol })) {
+      const canPlaceNewPiece = isValidMove(
+        newBoard,
+        newPiece.shape,
+        { row: startRow, col: startCol },
+      );
+
+      if (!canPlaceNewPiece) {
         return {
-          ...initialState, started: false, gameIsOver: true, lastScore: state.score,
+          ...initialState,
+          started: false,
+          gameIsOver: true,
+          lastScore: state.score,
         };
       }
 
@@ -99,7 +112,10 @@ const gameSlice = createSlice({
 
       if (!isValidMove(newBoard, newPiece.shape, finalState.piecePosition)) {
         return {
-          ...finalState, started: false, gameIsOver: true, lastScore: state.score,
+          ...initialState,
+          started: false,
+          gameIsOver: true,
+          lastScore: state.score,
         };
       }
 

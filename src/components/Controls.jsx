@@ -5,31 +5,47 @@ const Controls = ({ gameState, dispatch, sounds }) => {
   const [isArrowDownPressed, setIsArrowDownPressed] = useState(false);
   const currentCol = gameState.piecePosition.col;
 
+  const handleArrowLeft = useCallback(() => {
+    dispatch(movePiece({ col: currentCol - 1 }));
+    sounds.playMoveSound();
+  }, [dispatch, currentCol, sounds]);
+
+  const handleArrowRight = useCallback(() => {
+    dispatch(movePiece({ col: currentCol + 1 }));
+    sounds.playMoveSound();
+  }, [dispatch, currentCol, sounds]);
+
+  const handleArrowUp = useCallback(() => {
+    dispatch(rotateCurrentPiece());
+    sounds.playRotateSound();
+  }, [dispatch, sounds]);
+
+  const handleArrowDown = useCallback(() => {
+    dispatch(dropPiece());
+    if (!isArrowDownPressed) {
+      sounds.playDropSound();
+      setIsArrowDownPressed(true);
+    }
+  }, [dispatch, isArrowDownPressed, sounds]);
+
   const onKeyDown = useCallback((e) => {
     switch (e.key) {
       case 'ArrowLeft':
-        dispatch(movePiece({ col: currentCol - 1 }));
-        sounds.playMoveSound();
+        handleArrowLeft();
         break;
       case 'ArrowRight':
-        dispatch(movePiece({ col: currentCol + 1 }));
-        sounds.playMoveSound();
+        handleArrowRight();
         break;
       case 'ArrowUp':
-        dispatch(rotateCurrentPiece());
-        sounds.playRotateSound();
+        handleArrowUp();
         break;
       case 'ArrowDown':
-        dispatch(dropPiece());
-        if (!isArrowDownPressed) {
-          sounds.playDropSound();
-          setIsArrowDownPressed(true);
-        }
+        handleArrowDown();
         break;
       default:
         break;
     }
-  }, [dispatch, currentCol, isArrowDownPressed, sounds]);
+  }, [handleArrowLeft, handleArrowRight, handleArrowUp, handleArrowDown]);
 
   const onKeyUp = useCallback((e) => {
     if (e.key === 'ArrowDown') setIsArrowDownPressed(false);
