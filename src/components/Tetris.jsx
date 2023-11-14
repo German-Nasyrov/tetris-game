@@ -1,54 +1,23 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFallSpeed } from '../slices/gameSlice';
-import { handleStartClick, handleRestartClick, handleCloseClick } from '../handlers/clickHandlers';
-import handleGameState from '../handlers/gameStateHandlers';
 import Header from './Header';
 import GameBoard from './GameBoard';
 import CurrentPiece from './CurrentPiece';
-import StartButton from './StartButton';
 import GameOverModal from './GameOverModal';
 import Sounds from './Sounds';
 import Controls from './Controls';
+import ScoreDisplay from './ScoreDisplay';
+import GameAnimation from './GameAnimation';
 import moveSound from '../sounds/move.mp3';
 import rotateSound from '../sounds/rotate.mp3';
 import dropSound from '../sounds/drop.mp3';
-
-const ScoreDisplay = ({ score, started, dispatch }) => (
-  <div className="score-container">
-    <div className="score">
-      Score:
-      {' '}
-      {score}
-    </div>
-    {!started && (
-      <div className="button-container">
-        <StartButton onStartClick={handleStartClick(dispatch)} />
-      </div>
-    )}
-  </div>
-);
+import { handleRestartClick, handleCloseClick } from '../handlers/clickHandlers';
 
 const Tetris = () => {
   const dispatch = useDispatch();
   const gameState = useSelector((state) => state.game);
   const sounds = Sounds({ moveSound, rotateSound, dropSound });
   const [showGameOverModal, setShowGameOverModal] = useState(false);
-  const timestampRef = useRef(0);
-  const lastUpdateTimestamp = useRef(timestampRef.current);
-
-  useEffect(() => {
-    const dispatchSetFallSpeed = (speed) => dispatch(setFallSpeed(speed));
-    const requestId = requestAnimationFrame(() => handleGameState(
-      dispatch,
-      gameState,
-      dispatchSetFallSpeed,
-      setShowGameOverModal,
-      lastUpdateTimestamp,
-    ));
-
-    return () => cancelAnimationFrame(requestId);
-  }, [gameState, dispatch]);
 
   return (
     <div className="main-container">
@@ -75,6 +44,11 @@ const Tetris = () => {
         />
       )}
       <Controls gameState={gameState} dispatch={dispatch} sounds={sounds} />
+      <GameAnimation
+        dispatch={dispatch}
+        gameState={gameState}
+        setShowGameOverModal={setShowGameOverModal}
+      />
     </div>
   );
 };

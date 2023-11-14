@@ -1,12 +1,6 @@
-name: Build check on different node.js versions
+name: Build check
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   build:

@@ -1,65 +1,47 @@
 import { useEffect, useState, useCallback } from 'react';
-import { movePiece, rotateCurrentPiece, dropPiece } from '../slices/gameSlice';
+import {
+  handleArrowLeft,
+  handleArrowRight,
+  handleArrowUp,
+  handleArrowDown,
+} from '../handlers/clickHandlers';
 
 const Controls = ({ gameState, dispatch, sounds }) => {
   const [isArrowDownPressed, setIsArrowDownPressed] = useState(false);
   const currentCol = gameState.piecePosition.col;
 
-  const handleArrowLeft = useCallback(() => {
-    dispatch(movePiece({ col: currentCol - 1 }));
-    sounds.playMoveSound();
-  }, [dispatch, currentCol, sounds]);
-
-  const handleArrowRight = useCallback(() => {
-    dispatch(movePiece({ col: currentCol + 1 }));
-    sounds.playMoveSound();
-  }, [dispatch, currentCol, sounds]);
-
-  const handleArrowUp = useCallback(() => {
-    dispatch(rotateCurrentPiece());
-    sounds.playRotateSound();
-  }, [dispatch, sounds]);
-
-  const handleArrowDown = useCallback(() => {
-    dispatch(dropPiece());
-    if (!isArrowDownPressed) {
-      sounds.playDropSound();
-      setIsArrowDownPressed(true);
-    }
-  }, [dispatch, isArrowDownPressed, sounds]);
-
-  const onKeyDown = useCallback((e) => {
+  const handleKeyDown = useCallback((e) => {
     switch (e.key) {
       case 'ArrowLeft':
-        handleArrowLeft();
+        handleArrowLeft(currentCol, dispatch, sounds);
         break;
       case 'ArrowRight':
-        handleArrowRight();
+        handleArrowRight(currentCol, dispatch, sounds);
         break;
       case 'ArrowUp':
-        handleArrowUp();
+        handleArrowUp(dispatch, sounds);
         break;
       case 'ArrowDown':
-        handleArrowDown();
+        handleArrowDown(dispatch, sounds, isArrowDownPressed, setIsArrowDownPressed);
         break;
       default:
         break;
     }
-  }, [handleArrowLeft, handleArrowRight, handleArrowUp, handleArrowDown]);
+  }, [dispatch, isArrowDownPressed, sounds, currentCol]);
 
-  const onKeyUp = useCallback((e) => {
+  const handleKeyUp = useCallback((e) => {
     if (e.key === 'ArrowDown') setIsArrowDownPressed(false);
   }, []);
 
   useEffect(() => {
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
 
     return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [onKeyDown, onKeyUp]);
+  }, [handleKeyDown, handleKeyUp]);
 
   return null;
 };

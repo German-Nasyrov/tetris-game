@@ -1,14 +1,40 @@
 import randomColor from 'randomcolor';
 
-const createTetromino = (shapes, startRow, startCol) => ({ shapes, startRow, startCol });
-
 const tetrominoes = {
-  I: createTetromino([[[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
-    [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]]], -2, 3),
-  L: createTetromino([[[0, 0, 1], [1, 1, 1], [0, 0, 0]], [[1, 0, 0], [1, 1, 1], [0, 0, 0]]], -1, 4),
-  O: createTetromino([[[1, 1], [1, 1]]], -1, 4),
-  T: createTetromino([[[0, 1, 0], [1, 1, 1], [0, 0, 0]]], -1, 4),
-  Z: createTetromino([[[1, 1, 0], [0, 1, 1], [0, 0, 0]], [[0, 1, 1], [1, 1, 0], [0, 0, 0]]], -1, 4),
+  I: {
+    shapes: [
+      [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
+      [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]],
+    ],
+    startRow: -2,
+    startCol: 3,
+  },
+  L: {
+    shapes: [
+      [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
+      [[1, 0, 0], [1, 1, 1], [0, 0, 0]],
+    ],
+    startRow: -1,
+    startCol: 4,
+  },
+  O: {
+    shapes: [[[1, 1], [1, 1]]],
+    startRow: -1,
+    startCol: 4,
+  },
+  T: {
+    shapes: [[[0, 1, 0], [1, 1, 1], [0, 0, 0]]],
+    startRow: -1,
+    startCol: 4,
+  },
+  Z: {
+    shapes: [
+      [[1, 1, 0], [0, 1, 1], [0, 0, 0]],
+      [[0, 1, 1], [1, 1, 0], [0, 0, 0]],
+    ],
+    startRow: -1,
+    startCol: 4,
+  },
 };
 
 const isValidMove = (board, piece, newPosition) => {
@@ -19,43 +45,24 @@ const isValidMove = (board, piece, newPosition) => {
     const newCol = newPosition.col + colIndex;
 
     if (cell) {
-      const isOutOfBounds = newRow < -2
-        || newRow >= board.length
-        || newCol < 0
-        || newCol >= board[0].length;
-      const cellOccupied = board[newRow] && board[newRow][newCol] !== null;
-
-      return isOutOfBounds || cellOccupied;
+      if (
+        (newRow < -2)
+        || (newRow >= board.length)
+        || (newCol < 0)
+        || (newCol >= board[0].length)
+        || (board[newRow] && board[newRow][newCol] !== null)
+      ) {
+        return true;
+      }
     }
 
     return false;
   }));
 };
 
-const clearFullRows = (board) => {
-  let rowIndex = board.length - 1;
-  let removedRowCount = 0;
-
-  while (rowIndex >= 0) {
-    if (board[rowIndex].every((cell) => cell !== null)) {
-      const numRowsToRemove = 1;
-      removedRowCount += 1;
-
-      for (let i = 0; i < numRowsToRemove; i += 1) {
-        board.splice(rowIndex, 1);
-        board.unshift(Array(board[0].length).fill(null));
-      }
-    } else {
-      rowIndex -= 1;
-    }
-  }
-
-  return removedRowCount;
-};
-
 const processDrop = (board, piece, position, pieceColor, score) => {
-  const newBoard = board.map((row) => row
-    .map((cell) => (cell?.color ? { color: cell.color } : null)));
+  const newBoard = board
+    .map((row) => row.map((cell) => (cell?.color ? { color: cell.color } : null)));
   let newScore = score;
   const removedRows = [];
 
@@ -68,7 +75,22 @@ const processDrop = (board, piece, position, pieceColor, score) => {
     });
   });
 
-  const removedRowCount = clearFullRows(newBoard);
+  let rowIndex = newBoard.length - 1;
+  let removedRowCount = 0;
+
+  while (rowIndex >= 0) {
+    if (newBoard[rowIndex].every((cell) => cell !== null)) {
+      const numRowsToRemove = 1;
+      removedRowCount += 1;
+
+      for (let i = 0; i < numRowsToRemove; i += 1) {
+        newBoard.splice(rowIndex, 1);
+        newBoard.unshift(Array(board[0].length).fill(null));
+      }
+    } else {
+      rowIndex -= 1;
+    }
+  }
 
   if (removedRowCount > 0) {
     newScore += 100 * removedRowCount;
@@ -94,18 +116,6 @@ const rotatePieceClockwise = (tetromino) => {
   return rotatedPiece;
 };
 
-const generateRandomTetromino = (
-  initialOrientations,
-  isFirstPiece,
-  isFirstIPiece,
-  randomOrientationIndex,
-) => ({
-  shape: initialOrientations.shapes[randomOrientationIndex],
-  color: randomColor(),
-  startRow: isFirstPiece ? initialOrientations.startRow : isFirstIPiece,
-  startCol: initialOrientations.startCol,
-});
-
 const getRandomTetromino = (isFirstPiece) => {
   const tetrominoKeys = Object.keys(tetrominoes);
 
@@ -125,18 +135,19 @@ const getRandomTetromino = (isFirstPiece) => {
     || initialOrientations.shapes.length === 0
   ) {
     console.error(`No orientations defined for ${randomKey}.`);
+
     return null;
   }
 
-  const randomOrientationIndex = isIPiece
-    ? 0
+  const randomOrientationIndex = isIPiece ? 0
     : Math.floor(Math.random() * initialOrientations.shapes.length);
-  const randomTetromino = generateRandomTetromino(
-    initialOrientations,
-    isFirstPiece,
-    isFirstIPiece,
-    randomOrientationIndex,
-  );
+
+  const randomTetromino = {
+    shape: initialOrientations.shapes[randomOrientationIndex],
+    color: randomColor(),
+    startRow: isFirstPiece ? initialOrientations.startRow : isFirstIPiece,
+    startCol: initialOrientations.startCol,
+  };
 
   return randomTetromino;
 };
