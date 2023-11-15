@@ -58,23 +58,20 @@ const removeRow = (board, rowIndex) => {
   board.unshift(Array(board[0].length).fill(null));
 };
 
+const findFullRows = (board) => board.reduce((fullRows, row, rowIndex) => {
+  if (isRowFull(row)) fullRows.push(rowIndex);
+
+  return fullRows;
+}, []);
+
 const removeFullRows = (board) => {
-  const removedRows = [];
-  let rowIndex = board.length - 1;
+  const removedRows = findFullRows(board);
   let removedRowCount = 0;
 
-  while (rowIndex >= 0) {
-    if (isRowFull(board[rowIndex])) {
-      const numRowsToRemove = 1;
-      removedRowCount += 1;
-
-      for (let i = 0; i < numRowsToRemove; i += 1) {
-        removeRow(board, rowIndex);
-      }
-    } else {
-      rowIndex -= 1;
-    }
-  }
+  removedRows.forEach((rowIndex) => {
+    removeRow(board, rowIndex);
+    removedRowCount += 1;
+  });
 
   return { removedRows, removedRowCount };
 };
