@@ -60,6 +60,15 @@ const rotateCurrentPieceReducer = (state) => {
   return { ...state, currentPiece: { ...currentOrientation, shape: newPiece } };
 };
 
+const resetGame = (lastScore) => ({
+  ...initialState,
+  started: false,
+  gameIsOver: true,
+  lastScore,
+});
+
+const playRowClearSound = () => new Audio(rowClearSound).play();
+
 const handleInvalidMove = (state) => {
   const { newBoard, removedRows, newScore } = processDrop(
     state.board,
@@ -68,29 +77,16 @@ const handleInvalidMove = (state) => {
     state.currentPiece.color,
     state.score,
   );
-
   const newPiece = getRandomTetromino(false);
   const { startRow, startCol } = newPiece;
-
   const canPlaceNewPiece = isValidMove(
     newBoard,
     newPiece.shape,
     { row: startRow, col: startCol },
   );
 
-  if (!canPlaceNewPiece) {
-    return {
-      ...initialState,
-      started: false,
-      gameIsOver: true,
-      lastScore: state.score,
-    };
-  }
-
-  if (removedRows.length > 0) {
-    const playRowClearSound = new Audio(rowClearSound);
-    playRowClearSound.play();
-  }
+  if (!canPlaceNewPiece) return resetGame(state.score);
+  if (removedRows.length > 0) playRowClearSound();
 
   const finalState = {
     ...state,
@@ -100,16 +96,10 @@ const handleInvalidMove = (state) => {
     currentPiece: newPiece,
   };
 
-  if (!isValidMove(newBoard, newPiece.shape, finalState.piecePosition)) {
-    return {
-      ...initialState,
-      started: false,
-      gameIsOver: true,
-      lastScore: state.score,
-    };
-  }
-
-  return finalState;
+  return (isValidMove(newBoard, newPiece.shape, finalState.piecePosition)
+    ? finalState
+    : resetGame(state.score)
+  );
 };
 
 const handleValidMove = (state, newPosition) => {

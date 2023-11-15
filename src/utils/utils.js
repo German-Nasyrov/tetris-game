@@ -14,22 +14,26 @@ const tetrominoes = {
   Z: createTetromino([[1, 1, 0], [0, 1, 1]], -1, 4),
 };
 
+const isCellOccupied = (board, row, col) => board[row] && board[row][col] !== null;
+
+const isMoveOutOfRange = (row, col, numRows, numCols) => row < 0
+  || row >= numRows || col < 0 || col >= numCols;
+
 const isValidMove = (board, piece, newPosition) => {
   if (!board || !piece) return false;
+
+  const numRows = board.length;
+  const numCols = board[0].length;
 
   return !piece.some((row, rowIndex) => row.some((cell, colIndex) => {
     const newRow = newPosition.row + rowIndex;
     const newCol = newPosition.col + colIndex;
 
-    const isRowOutOfRange = newRow < -2 || newRow >= board.length;
-    const isColOutOfRange = newCol < 0 || newCol >= board[0].length;
-    const isCellOccupied = board[newRow] && board[newRow][newCol] !== null;
+    const isRowOutOfRange = isMoveOutOfRange(newRow, 0, numRows);
+    const isColOutOfRange = isMoveOutOfRange(newCol, 0, numCols);
+    const isCellOccupiedFlag = isCellOccupied(board, newRow, newCol);
 
-    if (cell && (isRowOutOfRange || isColOutOfRange || isCellOccupied)) {
-      return true;
-    }
-
-    return false;
+    return cell && (isRowOutOfRange || isColOutOfRange || isCellOccupiedFlag);
   }));
 };
 
@@ -47,19 +51,25 @@ const placePieceOnBoard = (board, piece, position, pieceColor) => {
   });
 };
 
+const isRowFull = (row) => row.every((cell) => cell !== null);
+
+const removeRow = (board, rowIndex) => {
+  board.splice(rowIndex, 1);
+  board.unshift(Array(board[0].length).fill(null));
+};
+
 const removeFullRows = (board) => {
   const removedRows = [];
   let rowIndex = board.length - 1;
   let removedRowCount = 0;
 
   while (rowIndex >= 0) {
-    if (board[rowIndex].every((cell) => cell !== null)) {
+    if (isRowFull(board[rowIndex])) {
       const numRowsToRemove = 1;
       removedRowCount += 1;
 
       for (let i = 0; i < numRowsToRemove; i += 1) {
-        board.splice(rowIndex, 1);
-        board.unshift(Array(board[0].length).fill(null));
+        removeRow(board, rowIndex);
       }
     } else {
       rowIndex -= 1;
