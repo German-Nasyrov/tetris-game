@@ -60,22 +60,8 @@ const rotateCurrentPieceReducer = (state) => {
   return { ...state, currentPiece: { ...currentOrientation, shape: newPiece } };
 };
 
-const dropPieceReducer = (state) => {
-  if (!state.started || !state.currentPiece) {
-    return state;
-  }
-
-  const newPosition = { ...state.piecePosition, row: state.piecePosition.row + 1 };
-
-  if (isValidMove(state.board, state.currentPiece.shape, newPosition)) {
-    return { ...state, piecePosition: newPosition };
-  }
-
-  const {
-    newBoard,
-    removedRows,
-    newScore,
-  } = processDrop(
+const handleInvalidMove = (state) => {
+  const { newBoard, removedRows, newScore } = processDrop(
     state.board,
     state.currentPiece.shape,
     state.piecePosition,
@@ -112,7 +98,6 @@ const dropPieceReducer = (state) => {
     score: newScore + calculateScore(removedRows),
     piecePosition: { row: startRow, col: startCol },
     currentPiece: newPiece,
-    currentPieceColor: newPiece.color,
   };
 
   if (!isValidMove(newBoard, newPiece.shape, finalState.piecePosition)) {
@@ -125,6 +110,23 @@ const dropPieceReducer = (state) => {
   }
 
   return finalState;
+};
+
+const handleValidMove = (state, newPosition) => {
+  if (isValidMove(state.board, state.currentPiece.shape, newPosition)) {
+    return { ...state, piecePosition: newPosition };
+  }
+  return handleInvalidMove(state);
+};
+
+const dropPieceReducer = (state) => {
+  if (!state.started || !state.currentPiece) {
+    return state;
+  }
+
+  const newPosition = { ...state.piecePosition, row: state.piecePosition.row + 1 };
+
+  return handleValidMove(state, newPosition);
 };
 
 const setFallSpeedReducer = (state, action) => ({ ...state, fallSpeed: action.payload });
