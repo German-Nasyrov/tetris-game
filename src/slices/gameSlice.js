@@ -7,6 +7,7 @@ import {
   getRandomTetromino,
 } from '../utils/utils';
 import rowClearSound from '../sounds/clear_row.mp3';
+import gameOverSound from '../sounds/game_over.mp3';
 
 const initialState = {
   started: false,
@@ -60,19 +61,23 @@ const rotateCurrentPieceReducer = (state) => {
   return { ...state, currentPiece: { ...currentOrientation, shape: newPiece } };
 };
 
-const resetGame = (lastScore) => ({
-  ...initialState,
-  started: false,
-  gameIsOver: true,
-  lastScore,
-});
+const playGameOverSound = () => new Audio(gameOverSound).play();
+
+const resetGame = (lastScore) => {
+  playGameOverSound();
+
+  return {
+    ...initialState,
+    started: false,
+    gameIsOver: true,
+    lastScore,
+  };
+};
 
 const playRowClearSound = () => new Audio(rowClearSound).play();
 
 const handleRowClear = (removedRows) => {
-  if (removedRows.length > 0) {
-    playRowClearSound();
-  }
+  if (removedRows.length > 0) playRowClearSound();
 };
 
 const updateGameState = (state, newBoard, removedRows, newPiece) => {
@@ -97,9 +102,7 @@ const handleInvalidMove = (state) => {
   );
   const newPiece = getRandomTetromino(false);
 
-  if (!isValidMove(newBoard, newPiece.shape, newPiece)) {
-    return resetGame(state.score);
-  }
+  if (!isValidMove(newBoard, newPiece.shape, newPiece)) resetGame(state.score);
 
   handleRowClear(removedRows);
 

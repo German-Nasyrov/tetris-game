@@ -1,4 +1,4 @@
-import GameOverModal from './GameBoard';
+import GameOverModal from './GameOverModal';
 import { handleRestartClick, handleCloseClick } from '../handlers/clickHandlers';
 
 const GameOverModalContainer = ({

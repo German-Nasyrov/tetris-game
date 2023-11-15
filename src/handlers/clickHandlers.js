@@ -13,17 +13,14 @@ const handleCloseClick = (setShowGameOverModal) => () => {
   setShowGameOverModal(false);
 };
 
-const handleArrowKey = (actionFunction, dispatch, sounds) => {
-  dispatch(actionFunction());
+const handleArrowLeft = (currentCol, dispatch, sounds) => {
+  dispatch(movePiece({ col: currentCol - 1 }));
   sounds.playMoveSound();
 };
 
-const handleArrowLeft = (currentCol, dispatch, sounds) => {
-  handleArrowKey(() => movePiece({ col: currentCol - 1 }), dispatch, sounds);
-};
-
 const handleArrowRight = (currentCol, dispatch, sounds) => {
-  handleArrowKey(() => movePiece({ col: currentCol + 1 }), dispatch, sounds);
+  dispatch(movePiece({ col: currentCol + 1 }));
+  sounds.playMoveSound();
 };
 
 const handleArrowUp = (dispatch, sounds) => {
@@ -32,7 +29,8 @@ const handleArrowUp = (dispatch, sounds) => {
 };
 
 const handleArrowDown = (dispatch, sounds, isArrowDownPressed, setIsArrowDownPressed) => {
-  handleArrowKey(() => dropPiece(), dispatch, sounds);
+  dispatch(dropPiece());
+
   if (!isArrowDownPressed) {
     sounds.playDropSound();
     setIsArrowDownPressed(true);
@@ -43,7 +41,6 @@ export {
   handleStartClick,
   handleRestartClick,
   handleCloseClick,
-  handleArrowKey,
   handleArrowLeft,
   handleArrowRight,
   handleArrowUp,

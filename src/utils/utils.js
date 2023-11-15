@@ -7,11 +7,20 @@ const createTetromino = (shapes, startRow, startCol) => ({
 });
 
 const tetrominoes = {
-  I: createTetromino([[1, 1, 1, 1], [0, 0, 0, 0]], -2, 3),
-  L: createTetromino([[0, 0, 1], [1, 1, 1]], -1, 4),
-  O: createTetromino([[1, 1], [1, 1]], -1, 4),
-  T: createTetromino([[0, 1, 0], [1, 1, 1]], -1, 4),
-  Z: createTetromino([[1, 1, 0], [0, 1, 1]], -1, 4),
+  I: createTetromino([
+    [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
+    [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]],
+  ], -2, 3),
+  L: createTetromino([
+    [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
+    [[1, 0, 0], [1, 1, 1], [0, 0, 0]],
+  ], -1, 4),
+  O: createTetromino([[[1, 1], [1, 1]]], -1, 4),
+  T: createTetromino([[[0, 1, 0], [1, 1, 1], [0, 0, 0]]], -1, 4),
+  Z: createTetromino([
+    [[1, 1, 0], [0, 1, 1], [0, 0, 0]],
+    [[0, 1, 1], [1, 1, 0], [0, 0, 0]],
+  ], -1, 4),
 };
 
 const isCellOccupied = (board, row, col) => board[row] && board[row][col] !== null;
@@ -147,15 +156,15 @@ const getRandomTetromino = (isFirstPiece) => {
 };
 
 const speedMap = {
-  1200: 700,
-  2600: 600,
-  4000: 500,
-  5400: 400,
-  7800: 300,
-  9000: 250,
-  12000: 200,
-  15000: 150,
-  20000: 100,
+  1000: 700,
+  2000: 600,
+  3000: 500,
+  4000: 400,
+  6000: 300,
+  8000: 250,
+  10000: 200,
+  12000: 150,
+  14000: 100,
 };
 
 export {
