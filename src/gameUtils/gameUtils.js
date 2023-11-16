@@ -1,4 +1,16 @@
 import randomColor from 'randomcolor';
+import rowClearSound from '../sounds/clear_row.mp3';
+import gameOverSound from '../sounds/game_over.mp3';
+
+const playGameOverSound = () => new Audio(gameOverSound).play();
+
+const playRowClearSound = () => new Audio(rowClearSound).play();
+
+const calculateScore = (removedRows) => removedRows.length * 100;
+
+const handleRowClear = (removedRows) => {
+  if (removedRows.length > 0) playRowClearSound();
+};
 
 const createTetromino = (shapes, startRow, startCol) => ({
   shapes: shapes.map((shape) => shape.map((row) => [...row])),
@@ -10,17 +22,17 @@ const tetrominoes = {
   I: createTetromino([
     [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
     [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]],
-  ], -2, 3),
+  ], -1, 3),
   L: createTetromino([
     [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
     [[1, 0, 0], [1, 1, 1], [0, 0, 0]],
-  ], -1, 4),
-  O: createTetromino([[[1, 1], [1, 1]]], -1, 4),
-  T: createTetromino([[[0, 1, 0], [1, 1, 1], [0, 0, 0]]], -1, 4),
+  ], 0, 4),
+  O: createTetromino([[[1, 1], [1, 1]]], 0, 4),
+  T: createTetromino([[[0, 1, 0], [1, 1, 1], [0, 0, 0]]], 0, 4),
   Z: createTetromino([
     [[1, 1, 0], [0, 1, 1], [0, 0, 0]],
     [[0, 1, 1], [1, 1, 0], [0, 0, 0]],
-  ], -1, 4),
+  ], 0, 4),
 };
 
 const isCellOccupied = (board, row, col) => board[row] && board[row][col] !== null;
@@ -100,8 +112,6 @@ const processDrop = (board, piece, position, pieceColor, score) => {
   return { newBoard, removedRows, newScore };
 };
 
-const calculateScore = (removedRows) => removedRows.length * 100;
-
 const rotatePieceClockwise = (tetromino) => {
   const rows = tetromino.shape.length;
   const cols = tetromino.shape[0].length;
@@ -155,6 +165,59 @@ const getRandomTetromino = (isFirstPiece) => {
   return randomTetromino;
 };
 
+const resetGame = (initialState, lastScore) => {
+  playGameOverSound();
+
+  return {
+    ...initialState,
+    started: false,
+    gameIsOver: true,
+    lastScore,
+  };
+};
+
+const updateGameState = (state, newBoard, removedRows, newPiece) => {
+  const newScore = state.score + calculateScore(removedRows);
+
+  return {
+    ...state,
+    board: newBoard,
+    score: newScore,
+    piecePosition: { row: newPiece.startRow, col: newPiece.startCol },
+    currentPiece: newPiece,
+  };
+};
+
+const handleInvalidMove = (state, initialState) => {
+  const { newBoard, removedRows } = processDrop(
+    state.board,
+    state.currentPiece.shape,
+    state.piecePosition,
+    state.currentPiece.color,
+    state.score,
+  );
+
+  const newPiece = getRandomTetromino(false);
+
+  if (!isValidMove(newBoard, newPiece.shape, newPiece)) resetGame(state.score);
+
+  handleRowClear(removedRows);
+
+  const finalState = updateGameState(state, newBoard, removedRows, newPiece);
+
+  return isValidMove(newBoard, newPiece.shape, finalState.piecePosition)
+    ? finalState
+    : resetGame(initialState, state.score);
+};
+
+const handleValidMove = (state, newPosition, initialState) => {
+  if (isValidMove(state.board, state.currentPiece.shape, newPosition)) {
+    return { ...state, piecePosition: newPosition };
+  }
+
+  return handleInvalidMove(state, initialState);
+};
+
 const speedMap = {
   1000: 700,
   2000: 600,
@@ -169,5 +232,5 @@ const speedMap = {
 
 export {
   tetrominoes, isValidMove, processDrop, calculateScore, rotatePieceClockwise, getRandomTetromino,
-  speedMap,
+  speedMap, resetGame, playGameOverSound, handleRowClear, handleValidMove,
 };

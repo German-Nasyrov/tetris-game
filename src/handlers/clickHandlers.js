@@ -13,14 +13,17 @@ const handleCloseClick = (setShowGameOverModal) => () => {
   setShowGameOverModal(false);
 };
 
-const handleArrowLeft = (currentCol, dispatch, sounds) => {
-  dispatch(movePiece({ col: currentCol - 1 }));
+const handleArrowMove = (currentCol, currentColOffset, dispatch, sounds) => {
+  dispatch(movePiece({ col: currentCol + currentColOffset }));
   sounds.playMoveSound();
 };
 
+const handleArrowLeft = (currentCol, dispatch, sounds) => {
+  handleArrowMove(currentCol, -1, dispatch, sounds);
+};
+
 const handleArrowRight = (currentCol, dispatch, sounds) => {
-  dispatch(movePiece({ col: currentCol + 1 }));
-  sounds.playMoveSound();
+  handleArrowMove(currentCol, 1, dispatch, sounds);
 };
 
 const handleArrowUp = (dispatch, sounds) => {

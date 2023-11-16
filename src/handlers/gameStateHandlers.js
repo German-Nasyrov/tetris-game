@@ -1,4 +1,4 @@
-import { speedMap } from '../utils/utils';
+import { speedMap } from '../gameUtils/gameUtils';
 import { startAnimation, cancelAnimation } from './animationHandlers';
 
 const handleGameState = (

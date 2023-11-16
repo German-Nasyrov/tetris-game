@@ -1,13 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   isValidMove,
-  processDrop,
-  calculateScore,
-  rotatePieceClockwise,
   getRandomTetromino,
-} from '../utils/utils';
-import rowClearSound from '../sounds/clear_row.mp3';
-import gameOverSound from '../sounds/game_over.mp3';
+  rotatePieceClockwise,
+  handleValidMove,
+} from '../gameUtils/gameUtils';
 
 const initialState = {
   started: false,
@@ -18,6 +15,7 @@ const initialState = {
   lastScore: 0,
   fallSpeed: 800,
   gameIsOver: null,
+  timeUntilStart: 500,
 };
 
 const startGameReducer = (state) => {
@@ -38,6 +36,7 @@ const movePieceReducer = (state, action) => {
   if (!state.started || !state.currentPiece || !state.currentPiece.shape) return state;
 
   const newPosition = { ...state.piecePosition, ...action.payload };
+
   if (!isValidMove(state.board, state.currentPiece.shape, newPosition)) return state;
 
   return { ...state, piecePosition: newPosition };
@@ -51,83 +50,23 @@ const rotateCurrentPieceReducer = (state) => {
   if (!currentOrientation.shape) return state;
 
   const newPiece = rotatePieceClockwise(currentOrientation);
-
   const newPosition = state.piecePosition;
 
-  if (!isValidMove(state.board, newPiece, newPosition)) {
-    return state;
-  }
+  if (!isValidMove(state.board, newPiece, newPosition)) return state;
 
   return { ...state, currentPiece: { ...currentOrientation, shape: newPiece } };
 };
 
-const playGameOverSound = () => new Audio(gameOverSound).play();
-
-const resetGame = (lastScore) => {
-  playGameOverSound();
-
-  return {
-    ...initialState,
-    started: false,
-    gameIsOver: true,
-    lastScore,
-  };
-};
-
-const playRowClearSound = () => new Audio(rowClearSound).play();
-
-const handleRowClear = (removedRows) => {
-  if (removedRows.length > 0) playRowClearSound();
-};
-
-const updateGameState = (state, newBoard, removedRows, newPiece) => {
-  const newScore = state.score + calculateScore(removedRows);
-
-  return {
-    ...state,
-    board: newBoard,
-    score: newScore,
-    piecePosition: { row: newPiece.startRow, col: newPiece.startCol },
-    currentPiece: newPiece,
-  };
-};
-
-const handleInvalidMove = (state) => {
-  const { newBoard, removedRows } = processDrop(
-    state.board,
-    state.currentPiece.shape,
-    state.piecePosition,
-    state.currentPiece.color,
-    state.score,
-  );
-  const newPiece = getRandomTetromino(false);
-
-  if (!isValidMove(newBoard, newPiece.shape, newPiece)) resetGame(state.score);
-
-  handleRowClear(removedRows);
-
-  const finalState = updateGameState(state, newBoard, removedRows, newPiece);
-
-  return isValidMove(newBoard, newPiece.shape, finalState.piecePosition)
-    ? finalState
-    : resetGame(state.score);
-};
-
-const handleValidMove = (state, newPosition) => {
-  if (isValidMove(state.board, state.currentPiece.shape, newPosition)) {
-    return { ...state, piecePosition: newPosition };
-  }
-  return handleInvalidMove(state);
-};
-
 const dropPieceReducer = (state) => {
-  if (!state.started || !state.currentPiece) {
-    return state;
+  if (!state.started || !state.currentPiece) return state;
+
+  if (state.timeUntilStart > 0) {
+    return { ...state, timeUntilStart: state.timeUntilStart - state.fallSpeed };
   }
 
   const newPosition = { ...state.piecePosition, row: state.piecePosition.row + 1 };
 
-  return handleValidMove(state, newPosition);
+  return handleValidMove(state, newPosition, initialState);
 };
 
 const setFallSpeedReducer = (state, action) => ({ ...state, fallSpeed: action.payload });
