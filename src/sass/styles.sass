@@ -1,20 +1,21 @@
 $modal-bg-color: #f7f7f7
 $modal-text-color: #333
 $modal-border-color: #ccc
-$modal-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
-$modal-title-font-size: 28px
-$modal-title-margin-bottom: 20px
-$modal-text-font-size: 20px
+$modal-box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1)
+$modal-title-font-size: 1.75rem
+$modal-title-margin-bottom: 1.25rem
+$modal-text-font-size: 1.25rem
 $button-bg-color: #0074D9
 $button-color: #FFF
-$button-font-size: 24px
+$button-font-size: 1.5rem
 $button-border: none
-$button-padding: 10px 20px
-$button-margin-top: 20px
-$close-button-font-size: 32px
+$button-padding: 0.625rem 1.25rem
+$button-margin-top: 1.25rem
+$close-button-font-size: 2rem
 $close-button-color: #777
 $overlay-bg-color: rgba(0, 0, 0, 0.5)
 
+// Base styles
 body
   background-color: gainsboro
   font-family: 'Arial', sans-serif
@@ -25,40 +26,40 @@ body
   font-family: 'Helvetica', sans-serif
 
 .header h1
-  font-size: 24px
+  font-size: 1.5rem
 
 .header p
-  font-size: 16px
+  font-size: 1rem
 
 .game-board-container
   display: flex
   justify-content: center
-  padding-top: 2em;
+  padding-top: 2rem
 
 .game-board
   display: grid
-  grid-template-columns: repeat(10, 30px)
-  grid-template-rows: repeat(20, 30px)
-  grid-gap: 1px
+  grid-template-columns: repeat(10, 2rem)
+  grid-template-rows: repeat(20, 2rem)
+  grid-gap: 0.0625rem
   background-color: #000
-  border: 1px solid #333
+  border: 0.0625rem solid #333
   justify-content: center
 
 .row
   display: contents
 
 .cell
-  width: 30px
-  height: 30px
+  width: 2rem
+  height: 2rem
   background-color: #333
-  border: 1px solid #555
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5)
+  border: 0.0625rem solid #555
+  box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.5)
 
 .current-piece
   display: grid
   grid-template-columns: repeat(4, 30px)
   grid-template-rows: repeat(4, 30px)
-  grid-gap: 1px
+  grid-gap: 0.0625rem
   background-color: transparent
 
 .piece-row
@@ -66,11 +67,11 @@ body
   justify-content: space-between
 
 .piece-cell
-  width: 30px
-  height: 30px
+  width: 2rem
+  height: 2rem
   background-color: transparent
-  border: 1px solid #555
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5)
+  border: 0,0625rem solid #555
+  box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.5)
 
 .button-container
   display: flex
@@ -79,10 +80,10 @@ body
 .start-button
   background-color: #0074D9
   color: #FFF
-  font-size: 24px
+  font-size: px
   border: none
-  padding: 10px 20px
-  margin-left: 1em
+  padding: 0.625rem 1.5rem
+  margin-left: 1rem
   cursor: pointer
 
 .score-container
@@ -92,7 +93,7 @@ body
   background-color: gainsboro
 
 .score
-  font-size: 24px
+  font-size: 1.5rem
   color: #333
   font-weight: bold
 
@@ -110,8 +111,8 @@ body
 
 .close-button
   position: absolute
-  top: 10px
-  right: 10px
+  top: 0.625rem
+  right: 0.625rem
   background: none
   border: none
   cursor: pointer
@@ -125,12 +126,12 @@ body
   padding: 20px
   text-align: center
   z-index: 1000
-  width: 20em
-  height: 15em
+  width: 1.25rem
+  height: 15rem
   position: relative
   display: flex
   flex-direction: column
-  justify-content: center;
+  justify-content: center
   align-items: center
 
 .modal button
@@ -140,7 +141,7 @@ body
   border: $button-border
   padding: $button-padding
   cursor: pointer
-  margin-top: 20px;
+  margin-top: 1.25rem
 
 .overlay.hidden
   display: none

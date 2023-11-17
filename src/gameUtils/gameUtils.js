@@ -18,20 +18,18 @@ const createTetromino = (shapes, startRow, startCol) => ({
   startCol,
 });
 
-const defineTetromino = (shapes, startRow, startCol) => createTetromino(shapes, startRow, startCol);
-
 const tetrominoes = {
-  I: defineTetromino([
+  I: createTetromino([
     [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
     [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]],
   ], -1, 3),
-  L: defineTetromino([
-    [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
+  L: createTetromino([
     [[1, 0, 0], [1, 1, 1], [0, 0, 0]],
+    [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
   ], 0, 4),
-  O: defineTetromino([[[1, 1], [1, 1]]], 0, 4),
-  T: defineTetromino([[[0, 1, 0], [1, 1, 1], [0, 0, 0]]], 0, 4),
-  Z: defineTetromino([
+  O: createTetromino([[[1, 1], [1, 1]]], 0, 4),
+  T: createTetromino([[[0, 1, 0], [1, 1, 1], [0, 0, 0]]], 0, 4),
+  Z: createTetromino([
     [[1, 1, 0], [0, 1, 1], [0, 0, 0]],
     [[0, 1, 1], [1, 1, 0], [0, 0, 0]],
   ], 0, 4),
@@ -123,10 +121,10 @@ const processDrop = (board, piece, position, pieceColor, score) => {
   return { newBoard, removedRows, newScore };
 };
 
-const transpose = (matrix) => matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
-
 const rotatePieceClockwise = (tetromino) => {
-  const rotatedPiece = transpose(tetromino.shape.map((row) => [...row].reverse()));
+  const rotatedPiece = tetromino.shape[0]
+    .map((_, colIndex) => tetromino.shape
+      .map((row) => row[colIndex]).reverse());
 
   return rotatedPiece;
 };
