@@ -21,7 +21,11 @@ const Tetris = () => {
   return (
     <div className="main-container">
       <Header />
-      <ScoreDisplay score={gameState.score} started={gameState.started} dispatch={dispatch} />
+      <ScoreDisplay
+        score={gameState.score}
+        started={gameState.started}
+        dispatch={dispatch}
+      />
       <GameBoardContainer gameState={gameState} />
       {gameState.gameIsOver && (
         <GameOverModalContainer
@@ -31,8 +35,16 @@ const Tetris = () => {
           setShowGameOverModal={setShowGameOverModal}
         />
       )}
-      <Controls gameState={gameState} dispatch={dispatch} sounds={sounds} />
-      <GameAnimationContainer dispatch={dispatch} gameState={gameState} setShowGameOverModal={setShowGameOverModal} />
+      <Controls
+        gameState={gameState}
+        dispatch={dispatch}
+        sounds={sounds}
+      />
+      <GameAnimationContainer
+        dispatch={dispatch}
+        gameState={gameState}
+        setShowGameOverModal={setShowGameOverModal}
+      />
     </div>
   );
 };

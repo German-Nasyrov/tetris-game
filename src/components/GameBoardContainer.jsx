@@ -8,7 +8,10 @@ const GameBoardContainer = ({ gameState }) => (
       currentPiece={gameState.currentPiece}
       piecePosition={gameState.piecePosition}
     >
-      <CurrentPiece piece={gameState.currentPiece} piecePosition={gameState.piecePosition} />
+      <CurrentPiece
+        piece={gameState.currentPiece}
+        piecePosition={gameState.piecePosition}
+      />
     </GameBoard>
   </div>
 );

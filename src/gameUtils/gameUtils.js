@@ -18,18 +18,20 @@ const createTetromino = (shapes, startRow, startCol) => ({
   startCol,
 });
 
+const defineTetromino = (shapes, startRow, startCol) => createTetromino(shapes, startRow, startCol);
+
 const tetrominoes = {
-  I: createTetromino([
+  I: defineTetromino([
     [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
     [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]],
   ], -1, 3),
-  L: createTetromino([
+  L: defineTetromino([
     [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
     [[1, 0, 0], [1, 1, 1], [0, 0, 0]],
   ], 0, 4),
-  O: createTetromino([[[1, 1], [1, 1]]], 0, 4),
-  T: createTetromino([[[0, 1, 0], [1, 1, 1], [0, 0, 0]]], 0, 4),
-  Z: createTetromino([
+  O: defineTetromino([[[1, 1], [1, 1]]], 0, 4),
+  T: defineTetromino([[[0, 1, 0], [1, 1, 1], [0, 0, 0]]], 0, 4),
+  Z: defineTetromino([
     [[1, 1, 0], [0, 1, 1], [0, 0, 0]],
     [[0, 1, 1], [1, 1, 0], [0, 0, 0]],
   ], 0, 4),
@@ -37,8 +39,12 @@ const tetrominoes = {
 
 const isCellOccupied = (board, row, col) => board[row] && board[row][col] !== null;
 
-const isMoveOutOfRange = (row, col, numRows, numCols) => row < 0
-  || row >= numRows || col < 0 || col >= numCols;
+const isMoveOutOfRange = (row, col, numRows, numCols) => {
+  const isRowOutOfRange = row < 0 || row >= numRows;
+  const isColOutOfRange = col < 0 || col >= numCols;
+
+  return isRowOutOfRange || isColOutOfRange;
+};
 
 const isValidMove = (board, piece, newPosition) => {
   if (!board || !piece) return false;
@@ -49,7 +55,6 @@ const isValidMove = (board, piece, newPosition) => {
   return !piece.some((row, rowIndex) => row.some((cell, colIndex) => {
     const newRow = newPosition.row + rowIndex;
     const newCol = newPosition.col + colIndex;
-
     const isRowOutOfRange = isMoveOutOfRange(newRow, 0, numRows);
     const isColOutOfRange = isMoveOutOfRange(newCol, 0, numCols);
     const isCellOccupiedFlag = isCellOccupied(board, newRow, newCol);
@@ -62,11 +67,21 @@ const copyBoardWithColors = (board) => board
   .map((row) => row.map((cell) => (cell?.color ? { color: cell.color } : null)));
 
 const placePieceOnBoard = (board, piece, position, pieceColor) => {
+  const numRows = board.length;
+  const numCols = board[0].length;
+
   piece.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
-      if (cell && position.row + rowIndex >= 0) {
-        const newCol = position.col + colIndex;
-        board[position.row + rowIndex][newCol] = { color: pieceColor };
+      const newRow = position.row + rowIndex;
+      const newCol = position.col + colIndex;
+
+      const isWithinBounds = (newRow >= 0)
+        && (newRow < numRows)
+        && (newCol >= 0)
+        && (newCol < numCols);
+
+      if (cell && isWithinBounds) {
+        board[newRow][newCol] = { color: pieceColor };
       }
     });
   });
@@ -79,11 +94,9 @@ const removeRow = (board, rowIndex) => {
   board.unshift(Array(board[0].length).fill(null));
 };
 
-const findFullRows = (board) => board.reduce((fullRows, row, rowIndex) => {
-  if (isRowFull(row)) fullRows.push(rowIndex);
-
-  return fullRows;
-}, []);
+const findFullRows = (board) => board
+  .map((row, rowIndex) => (isRowFull(row) ? rowIndex : null))
+  .filter((index) => index !== null);
 
 const removeFullRows = (board) => {
   const removedRows = findFullRows(board);
@@ -105,23 +118,15 @@ const processDrop = (board, piece, position, pieceColor, score) => {
 
   const { removedRows, removedRowCount } = removeFullRows(newBoard);
 
-  if (removedRowCount > 0) {
-    newScore += 100 * removedRowCount;
-  }
+  if (removedRowCount > 0) newScore += 100 * removedRowCount;
 
   return { newBoard, removedRows, newScore };
 };
 
-const rotatePieceClockwise = (tetromino) => {
-  const rows = tetromino.shape.length;
-  const cols = tetromino.shape[0].length;
-  const rotatedPiece = Array.from({ length: cols }, () => Array.from({ length: rows }, () => 0));
+const transpose = (matrix) => matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
 
-  for (let row = 0; row < rows; row += 1) {
-    for (let col = 0; col < cols; col += 1) {
-      rotatedPiece[col][rows - 1 - row] = tetromino.shape[row][col];
-    }
-  }
+const rotatePieceClockwise = (tetromino) => {
+  const rotatedPiece = transpose(tetromino.shape.map((row) => [...row].reverse()));
 
   return rotatedPiece;
 };
@@ -132,33 +137,47 @@ const getRandomKey = (tetrominoKeys) => {
     return null;
   }
 
-  return tetrominoKeys[Math.floor(Math.random() * tetrominoKeys.length)];
+  const randomIndex = Math.floor(Math.random() * tetrominoKeys.length);
+
+  return tetrominoKeys[randomIndex];
 };
 
-const getRandomOrientationIndex = (isIPiece, shapes) => (
-  isIPiece
-    ? 0
-    : Math.floor(Math.random() * shapes.length)
-);
+const getRandomOrientationIndex = (isIPiece, shapes) => {
+  const defaultOrientationIndex = 0;
+  const randomOrientationIndex = Math.floor(Math.random() * shapes.length);
+
+  return isIPiece ? defaultOrientationIndex : randomOrientationIndex;
+};
 
 const getRandomTetromino = (isFirstPiece) => {
   const tetrominoKeys = Object.keys(tetrominoes);
   const randomKey = getRandomKey(tetrominoKeys);
   const initialOrientations = tetrominoes[randomKey];
   const isIPiece = randomKey === 'I';
-  const isFirstIPiece = isIPiece ? -1 : 0;
+  const offGrid = -1;
+  const onGrid = 0;
 
-  if (!initialOrientations || !initialOrientations.shapes
-      || initialOrientations.shapes.length === 0) {
-    console.error(`No orientations defined for ${randomKey}.`);
+  const isFirstIPiece = isIPiece ? offGrid : onGrid;
+
+  const hasValidOrientations = (
+    initialOrientations
+    && initialOrientations.shapes
+    && initialOrientations.shapes.length > 0
+  );
+
+  if (!hasValidOrientations) {
+    console.error(`No valid orientations defined for ${randomKey}.`);
     return null;
   }
 
   const randomOrientationIndex = getRandomOrientationIndex(isIPiece, initialOrientations.shapes);
+
+  const startRow = isFirstPiece ? initialOrientations.startRow : isFirstIPiece;
+
   const randomTetromino = {
     shape: initialOrientations.shapes[randomOrientationIndex],
     color: randomColor(),
-    startRow: isFirstPiece ? initialOrientations.startRow : isFirstIPiece,
+    startRow,
     startCol: initialOrientations.startCol,
   };
 
@@ -177,7 +196,8 @@ const resetGame = (initialState, lastScore) => {
 };
 
 const updateGameState = (state, newBoard, removedRows, newPiece) => {
-  const newScore = state.score + calculateScore(removedRows);
+  const { score } = state;
+  const newScore = score + calculateScore(removedRows);
 
   return {
     ...state,
@@ -189,17 +209,21 @@ const updateGameState = (state, newBoard, removedRows, newPiece) => {
 };
 
 const handleInvalidMove = (state, initialState) => {
+  const {
+    board, currentPiece, piecePosition, score,
+  } = state;
+
   const { newBoard, removedRows } = processDrop(
-    state.board,
-    state.currentPiece.shape,
-    state.piecePosition,
-    state.currentPiece.color,
-    state.score,
+    board,
+    currentPiece.shape,
+    piecePosition,
+    currentPiece.color,
+    score,
   );
 
   const newPiece = getRandomTetromino(false);
 
-  if (!isValidMove(newBoard, newPiece.shape, newPiece)) resetGame(state.score);
+  if (!isValidMove(newBoard, newPiece.shape, newPiece)) resetGame(score);
 
   handleRowClear(removedRows);
 
@@ -207,16 +231,48 @@ const handleInvalidMove = (state, initialState) => {
 
   return isValidMove(newBoard, newPiece.shape, finalState.piecePosition)
     ? finalState
-    : resetGame(initialState, state.score);
+    : resetGame(initialState, score);
 };
 
 const handleValidMove = (state, newPosition, initialState) => {
-  if (isValidMove(state.board, state.currentPiece.shape, newPosition)) {
+  const { board, currentPiece } = state;
+
+  if (isValidMove(board, currentPiece.shape, newPosition)) {
     return { ...state, piecePosition: newPosition };
   }
 
   return handleInvalidMove(state, initialState);
 };
+
+const isPieceCellFilled = (rowIndex, colIndex, piecePosition, currentPiece) => {
+  if (!currentPiece) return false;
+
+  const { row, col } = piecePosition;
+  const { shape } = currentPiece;
+  const pieceRow = rowIndex - row;
+  const pieceCol = colIndex - col;
+
+  const isInsideRow = pieceRow >= 0 && pieceRow < shape.length;
+  const isInsideCol = pieceCol >= 0 && pieceCol < shape[0].length;
+  const isPieceCell = isInsideRow && isInsideCol && shape[pieceRow][pieceCol] === 1;
+
+  return isPieceCell;
+};
+
+const isCellFilledOrPiece = (
+  cell,
+  isPieceCell,
+  rowIndex,
+  colIndex,
+  piecePosition,
+  currentPiece,
+) => {
+  const isCellFilled = cell !== null
+  || (isPieceCell && isPieceCellFilled(rowIndex, colIndex, piecePosition, currentPiece));
+  return isCellFilled;
+};
+
+const getCellColor = (cell) => cell?.color || null;
 
 const speedMap = {
   1000: 700,
@@ -232,5 +288,6 @@ const speedMap = {
 
 export {
   tetrominoes, isValidMove, processDrop, calculateScore, rotatePieceClockwise, getRandomTetromino,
-  speedMap, resetGame, playGameOverSound, handleRowClear, handleValidMove,
+  speedMap, resetGame, playGameOverSound, handleRowClear, handleValidMove, isCellFilledOrPiece,
+  isPieceCellFilled, getCellColor,
 };

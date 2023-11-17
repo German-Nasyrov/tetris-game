@@ -19,7 +19,9 @@ const initialState = {
 };
 
 const startGameReducer = (state) => {
-  if (state.started) return state;
+  const { started } = state;
+
+  if (started) return state;
 
   const newPiece = getRandomTetromino(true);
   const { startRow, startCol } = newPiece;
@@ -33,43 +35,71 @@ const startGameReducer = (state) => {
 };
 
 const movePieceReducer = (state, action) => {
-  if (!state.started || !state.currentPiece || !state.currentPiece.shape) return state;
+  const { payload } = action;
 
-  const newPosition = { ...state.piecePosition, ...action.payload };
+  const {
+    started,
+    currentPiece,
+    piecePosition,
+    board,
+  } = state;
 
-  if (!isValidMove(state.board, state.currentPiece.shape, newPosition)) return state;
+  if (!started || !currentPiece || !currentPiece.shape) return state;
+
+  const newPosition = { ...piecePosition, ...payload };
+
+  if (!isValidMove(board, currentPiece.shape, newPosition)) return state;
 
   return { ...state, piecePosition: newPosition };
 };
 
 const rotateCurrentPieceReducer = (state) => {
-  if (!state.started || !state.currentPiece) return state;
+  const {
+    started,
+    currentPiece,
+    piecePosition,
+    board,
+  } = state;
 
-  const currentOrientation = state.currentPiece;
+  if (!started || !currentPiece) return state;
+
+  const currentOrientation = currentPiece;
 
   if (!currentOrientation.shape) return state;
 
   const newPiece = rotatePieceClockwise(currentOrientation);
-  const newPosition = state.piecePosition;
+  const newPosition = piecePosition;
 
-  if (!isValidMove(state.board, newPiece, newPosition)) return state;
+  if (!isValidMove(board, newPiece, newPosition)) return state;
 
   return { ...state, currentPiece: { ...currentOrientation, shape: newPiece } };
 };
 
 const dropPieceReducer = (state) => {
-  if (!state.started || !state.currentPiece) return state;
+  const {
+    started,
+    currentPiece,
+    piecePosition,
+    timeUntilStart,
+    fallSpeed,
+  } = state;
 
-  if (state.timeUntilStart > 0) {
-    return { ...state, timeUntilStart: state.timeUntilStart - state.fallSpeed };
+  if (!started || !currentPiece) return state;
+
+  if (timeUntilStart > 0) {
+    return { ...state, timeUntilStart: timeUntilStart - fallSpeed };
   }
 
-  const newPosition = { ...state.piecePosition, row: state.piecePosition.row + 1 };
+  const newPosition = { ...piecePosition, row: piecePosition.row + 1 };
 
   return handleValidMove(state, newPosition, initialState);
 };
 
-const setFallSpeedReducer = (state, action) => ({ ...state, fallSpeed: action.payload });
+const setFallSpeedReducer = (state, action) => {
+  const { payload } = action;
+
+  return { ...state, fallSpeed: payload };
+};
 
 const gameSlice = createSlice({
   name: 'game',

@@ -8,18 +8,21 @@ const handleGameState = (
   setShowGameOverModal,
   lastUpdateTimestamp,
 ) => {
-  const animate = startAnimation(dispatch, gameState, lastUpdateTimestamp);
+  const {
+    score, fallSpeed, started, gameIsOver,
+  } = gameState;
 
-  const currentScore = gameState.score;
+  const animate = startAnimation(dispatch, gameState, lastUpdateTimestamp);
+  const currentScore = score;
   let requestId;
 
-  if (speedMap[currentScore] && gameState.fallSpeed !== speedMap[currentScore]) {
+  if (speedMap[currentScore] && fallSpeed !== speedMap[currentScore]) {
     dispatchSetFallSpeed(speedMap[currentScore]);
   }
 
-  if (gameState.started) requestId = requestAnimationFrame(animate);
+  if (started) requestId = requestAnimationFrame(animate);
 
-  if (gameState.gameIsOver) setShowGameOverModal(true);
+  if (gameIsOver) setShowGameOverModal(true);
 
   return () => cancelAnimation(requestId);
 };
