@@ -15,6 +15,4 @@ const startAnimation = (dispatch, gameState, lastUpdateTimestamp) => {
   return animate;
 };
 
-const cancelAnimation = (requestId) => () => cancelAnimationFrame(requestId);
-
-export { startAnimation, cancelAnimation };
+export default startAnimation;

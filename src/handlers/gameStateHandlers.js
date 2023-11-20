@@ -1,5 +1,5 @@
 import { speedMap } from '../gameUtils/gameUtils';
-import { startAnimation, cancelAnimation } from './animationHandlers';
+import startAnimation from './animationHandlers';
 
 const handleGameState = (
   dispatch,
@@ -24,7 +24,7 @@ const handleGameState = (
 
   if (gameIsOver) setShowGameOverModal(true);
 
-  return () => cancelAnimation(requestId);
+  return () => cancelAnimationFrame(requestId);
 };
 
 export default handleGameState;
