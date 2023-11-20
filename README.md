@@ -1,4 +1,4 @@
-# Tetris
+# Tetris game
 
 ## System requirments:
 
@@ -17,7 +17,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/5cd3fb9fed4d7ae5d98e/maintainability)](https://codeclimate.com/github/OGGera/tetris-game/maintainability)
 
 ## Description:
-This application is a Tetris game.
+This application is a [Tetris game](https://tetris-game-project.vercel.app/) with classic board sizes.
 
 ## Made with the help of:
 
@@ -32,10 +32,7 @@ This application is a Tetris game.
 ```
 
 ## Some features:
-
-```sh
-• You can control the position of the shapes using the arrow up, arrow down, arrow left and arrow right buttons
-```
+You can control the position of the shapes using the arrow up, arrow down, arrow left and arrow right buttons
 
 ## Installation:
 
@@ -45,6 +42,6 @@ All commands should run from root:
 # Install the dependencies and run build
 $ make install
 
-# Start frontend and backend in root folder
+# Start app in root folder
 $ make start
 ```
