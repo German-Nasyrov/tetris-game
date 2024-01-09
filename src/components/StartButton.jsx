@@ -7,7 +7,7 @@ const StartButton = ({ onStartClick }) => (
     variant="primary"
     className="start-button"
   >
-    Старт
+    Start
   </Button>
 );
 
