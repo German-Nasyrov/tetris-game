@@ -132,15 +132,59 @@ body
   flex-direction: column
   justify-content: center
   align-items: center
+  border-radius: 10px
+  animation: fadeIn 0.3s ease-in-out
+
+  @keyframes fadeIn
+    from
+      opacity: 0
+      transform: scale(0.9)
+    to
+      opacity: 1
+      transform: scale(1)
 
 .modal button
-  background-color: $button-bg-color
-  color: $button-color
-  font-size: $button-font-size
-  border: $button-border
-  padding: $button-padding
-  cursor: pointer
-  margin-top: 1.25rem
+    background-color: $button-bg-color
+    color: $button-color
+    font-size: $button-font-size
+    border: $button-border
+    padding: $button-padding
+    cursor: pointer
+    margin-top: 1.25rem
+    border-radius: 5px
+    transition: background-color 0.3s
+
+    &:hover
+      background-color: darken($button-bg-color, 10%)
 
 .overlay.hidden
   display: none
+
+.nickname-value
+  border-radius: 0.5rem
+  height: 1.5rem
+  padding: 0.5rem
+  margin-top: 0.5rem
+  font-size: 1rem
+  border: 1px solid #ced4da
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
+
+  &:focus
+    border-color: #80bdff
+    outline: 0
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(128, 189, 255, 0.6)
+
+.nickname
+  width: 100%
+
+label
+  font-weight: bold
+
+.error-text
+  color: red
+  font-size: 0.875rem
+  margin-top: 0.5rem
+
+.modal-block
+  width: 100%
+  text-align: left

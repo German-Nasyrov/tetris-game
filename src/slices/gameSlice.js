@@ -16,6 +16,16 @@ const initialState = {
   fallSpeed: 800,
   gameIsOver: null,
   timeUntilStart: 500,
+  nickName: '',
+};
+
+const setNickNameReducer = (state, action) => {
+  const nickName = action.payload;
+
+  return {
+    ...state,
+    nickName,
+  };
 };
 
 const startGameReducer = (state) => {
@@ -105,6 +115,7 @@ const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
+    setNickName: setNickNameReducer,
     startGame: startGameReducer,
     movePiece: movePieceReducer,
     rotateCurrentPiece: rotateCurrentPieceReducer,
@@ -114,6 +125,7 @@ const gameSlice = createSlice({
 });
 
 export const {
+  setNickName,
   startGame,
   movePiece,
   rotateCurrentPiece,

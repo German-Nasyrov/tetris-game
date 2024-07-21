@@ -1,6 +1,30 @@
 import {
-  startGame, movePiece, rotateCurrentPiece, dropPiece,
+  setNickName, startGame, movePiece, rotateCurrentPiece, dropPiece,
 } from '../slices/gameSlice';
+
+const handleInputChangeNickName = (event, setLocalNickName) => {
+  const text = event.target.value;
+
+  if (text.length <= 20) {
+    setLocalNickName(text);
+  } else {
+    setLocalNickName(text.substring(0, 20));
+  }
+};
+
+const handleAcceptNickName = (localNickName, setShowNickNameModal, dispatch) => {
+  dispatch(setNickName(localNickName));
+  setShowNickNameModal(false);
+};
+
+const handleAcceptClick = (localNickName, setShowNickNameModal, dispatch, setError) => {
+  if (localNickName.trim()) {
+    handleAcceptNickName(localNickName, setShowNickNameModal, dispatch);
+    setError('');
+  } else {
+    setError('Nickname cannot be empty or just spaces.');
+  }
+};
 
 const handleStartClick = (dispatch) => () => dispatch(startGame());
 
@@ -41,6 +65,9 @@ const handleArrowDown = (dispatch, sounds, isArrowDownPressed, setIsArrowDownPre
 };
 
 export {
+  handleInputChangeNickName,
+  handleAcceptClick,
+  handleAcceptNickName,
   handleStartClick,
   handleRestartClick,
   handleCloseClick,

@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from './Header';
+import Nickname from './Nickname';
 import GameBoardContainer from './GameBoardContainer';
 import GameOverModalContainer from './GameOverModalContainer';
 import GameAnimationContainer from './GameAnimationContainer';
@@ -17,9 +18,19 @@ const Tetris = () => {
   const gameState = useSelector((state) => state.game);
   const sounds = Sounds({ moveSound, rotateSound, dropSound });
   const [showGameOverModal, setShowGameOverModal] = useState(false);
+  const [showNickNameModal, setShowNickNameModal] = useState(true);
+
+  useEffect(() => {
+    setShowNickNameModal(true);
+  }, []);
 
   return (
     <div className="main-container">
+      <Nickname
+        dispatch={dispatch}
+        showNickNameModal={showNickNameModal}
+        setShowNickNameModal={setShowNickNameModal}
+      />
       <Header />
       <ScoreDisplay score={gameState.score} started={gameState.started} dispatch={dispatch} />
       <GameBoardContainer gameState={gameState} />
