@@ -1,5 +1,5 @@
 import {
-  setNickName, startGame, movePiece, rotateCurrentPiece, dropPiece,
+  setNewRecord, setNickName, startGame, movePiece, rotateCurrentPiece, dropPiece, setGameIsOver,
 } from '../slices/gameSlice';
 
 const handleInputChangeNickName = (event, setLocalNickName) => {
@@ -12,29 +12,32 @@ const handleInputChangeNickName = (event, setLocalNickName) => {
   }
 };
 
-const handleAcceptNickName = (localNickName, setShowNickNameModal, dispatch) => {
-  dispatch(setNickName(localNickName));
-  setShowNickNameModal(false);
-};
-
-const handleAcceptClick = (localNickName, setShowNickNameModal, dispatch, setError) => {
+const handleAcceptClick = (localNickName, setShowNickNameModal, dispatch, setError, score) => {
   if (localNickName.trim()) {
-    handleAcceptNickName(localNickName, setShowNickNameModal, dispatch);
+    dispatch(setNickName(localNickName));
+    dispatch(setNewRecord(score));
+    setShowNickNameModal(false);
     setError('');
   } else {
     setError('Nickname cannot be empty or just spaces.');
   }
 };
 
-const handleStartClick = (dispatch) => () => dispatch(startGame());
+const handleStartClick = (score, dispatch) => () => {
+  dispatch(setNewRecord(score));
+  dispatch(startGame());
+};
 
-const handleRestartClick = (dispatch, setShowGameOverModal) => () => {
+const handleRestartClick = (score, dispatch, setShowGameOverModal) => () => {
+  dispatch(setNewRecord(score));
   dispatch(startGame());
   setShowGameOverModal(false);
 };
 
-const handleCloseClick = (setShowGameOverModal) => () => {
+const handleCloseClick = (score, dispatch, setShowGameOverModal) => () => {
+  dispatch(setNewRecord(score));
   setShowGameOverModal(false);
+  dispatch(setGameIsOver(false));
 };
 
 const handleArrowMove = (currentCol, currentColOffset, dispatch, sounds) => {
@@ -67,7 +70,6 @@ const handleArrowDown = (dispatch, sounds, isArrowDownPressed, setIsArrowDownPre
 export {
   handleInputChangeNickName,
   handleAcceptClick,
-  handleAcceptNickName,
   handleStartClick,
   handleRestartClick,
   handleCloseClick,

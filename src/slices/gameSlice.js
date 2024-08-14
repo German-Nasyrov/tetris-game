@@ -14,22 +14,30 @@ const initialState = {
   score: 0,
   lastScore: 0,
   fallSpeed: 800,
-  gameIsOver: null,
+  gameIsOver: false,
   timeUntilStart: 500,
   nickName: '',
+  scoreDesk: {},
+};
+
+const setNewRecordReducer = (state, action) => {
+  const newRecord = action.payload;
+  const { nickName, scoreDesk } = state;
+  const updatedScoreDesk = {
+    ...scoreDesk,
+    [nickName]: Math.max(scoreDesk[nickName] || 0, newRecord),
+  };
+
+  return { ...state, scoreDesk: updatedScoreDesk, lastScore: newRecord };
 };
 
 const setNickNameReducer = (state, action) => {
   const nickName = action.payload;
-
-  return {
-    ...state,
-    nickName,
-  };
+  return { ...state, nickName };
 };
 
 const startGameReducer = (state) => {
-  const { started } = state;
+  const { started, nickName, scoreDesk } = state;
 
   if (started) return state;
 
@@ -41,6 +49,8 @@ const startGameReducer = (state) => {
     started: true,
     currentPiece: newPiece,
     piecePosition: { row: startRow, col: startCol },
+    nickName,
+    scoreDesk,
   };
 };
 
@@ -111,26 +121,36 @@ const setFallSpeedReducer = (state, action) => {
   return { ...state, fallSpeed: payload };
 };
 
+const setGameIsOverReducer = (state, action) => {
+  const { payload } = action;
+
+  return { ...state, gameIsOver: payload };
+};
+
 const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
+    setNewRecord: setNewRecordReducer,
     setNickName: setNickNameReducer,
     startGame: startGameReducer,
     movePiece: movePieceReducer,
     rotateCurrentPiece: rotateCurrentPieceReducer,
     dropPiece: dropPieceReducer,
     setFallSpeed: setFallSpeedReducer,
+    setGameIsOver: setGameIsOverReducer,
   },
 });
 
 export const {
+  setNewRecord,
   setNickName,
   startGame,
   movePiece,
   rotateCurrentPiece,
   dropPiece,
   setFallSpeed,
+  setGameIsOver,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

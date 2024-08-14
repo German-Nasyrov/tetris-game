@@ -6,8 +6,8 @@ const GameOverModalContainer = ({
 }) => (
   <GameOverModal
     score={score}
-    onRestartClick={handleRestartClick(dispatch, setShowGameOverModal)}
-    onCloseClick={handleCloseClick(setShowGameOverModal)}
+    onRestartClick={handleRestartClick(score, dispatch, setShowGameOverModal)}
+    onCloseClick={handleCloseClick(score, dispatch, setShowGameOverModal)}
     isModalOpen={showGameOverModal}
   />
 );

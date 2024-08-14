@@ -18,6 +18,13 @@ $overlay-bg-color: rgba(0, 0, 0, 0.5)
 body
   background-color: gainsboro
   font-family: 'Arial', sans-serif
+  padding: 0
+  margin: 0
+
+.main-container
+  background-image: url('../img/background.png')
+  background-size: contain
+  height: 100vh
 
 .header
   text-align: center
@@ -89,12 +96,6 @@ body
   display: flex
   align-items: center
   justify-content: center
-  background-color: gainsboro
-
-.score
-  font-size: 1.5rem
-  color: #333
-  font-weight: bold
 
 .overlay
   position: fixed
@@ -168,6 +169,7 @@ body
   font-size: 1rem
   border: 1px solid #ced4da
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
+  margin-top: 2rem
 
   &:focus
     border-color: #80bdff
@@ -188,3 +190,39 @@ label
 .modal-block
   width: 100%
   text-align: left
+
+.game-content
+  display: flex
+  justify-content: center
+  align-items: flex-start
+  gap: 2rem
+  margin-top: 2rem
+
+.score-desk
+  background-color: #f0f0f0
+  padding: 1rem
+  border-radius: 10px
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
+  width: 200px
+  min-height: 200px
+  margin-top: 2rem
+
+.score-entry
+  margin-bottom: 0.75rem
+
+.scores
+  font-size: 1.25rem
+  font-weight: bold
+  color: #333
+
+.score
+  display: flex
+  justify-content: space-between
+  align-items: center
+  font-size: 1.5rem
+  font-weight: bold
+
+.players-score
+  font-size: 1 rem
+  color: #333
+  font-weight: 100

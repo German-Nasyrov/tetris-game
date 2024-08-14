@@ -11,7 +11,7 @@ const ScoreDisplay = ({ score, started, dispatch }) => (
     </div>
     {!started && (
       <div className="button-container">
-        <StartButton onStartClick={handleStartClick(dispatch)} />
+        <StartButton onStartClick={handleStartClick(score, dispatch)} />
       </div>
     )}
   </div>

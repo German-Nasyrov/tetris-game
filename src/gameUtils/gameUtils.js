@@ -182,7 +182,7 @@ const getRandomTetromino = (isFirstPiece) => {
   return randomTetromino;
 };
 
-const resetGame = (initialState, lastScore) => {
+const resetGame = (initialState, nickName, scoreDesk, lastScore) => {
   playGameOverSound();
 
   return {
@@ -190,6 +190,8 @@ const resetGame = (initialState, lastScore) => {
     started: false,
     gameIsOver: true,
     lastScore,
+    nickName,
+    scoreDesk,
   };
 };
 
@@ -208,7 +210,7 @@ const updateGameState = (state, newBoard, removedRows, newPiece) => {
 
 const handleInvalidMove = (state, initialState) => {
   const {
-    board, currentPiece, piecePosition, score,
+    board, currentPiece, piecePosition, score, nickName, scoreDesk,
   } = state;
 
   const { newBoard, removedRows } = processDrop(
@@ -221,7 +223,7 @@ const handleInvalidMove = (state, initialState) => {
 
   const newPiece = getRandomTetromino(false);
 
-  if (!isValidMove(newBoard, newPiece.shape, newPiece)) resetGame(score);
+  if (!isValidMove(newBoard, newPiece.shape, newPiece)) resetGame(nickName, scoreDesk, score);
 
   handleRowClear(removedRows);
 
@@ -229,7 +231,7 @@ const handleInvalidMove = (state, initialState) => {
 
   return isValidMove(newBoard, newPiece.shape, finalState.piecePosition)
     ? finalState
-    : resetGame(initialState, score);
+    : resetGame(initialState, nickName, scoreDesk, score);
 };
 
 const handleValidMove = (state, newPosition, initialState) => {
