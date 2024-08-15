@@ -1,8 +1,12 @@
 import { dropPiece } from '../slices/gameSlice';
 
+let animationActive = false;
+
 const startAnimation = (dispatch, gameState, lastUpdateTimestamp) => {
   const animate = (timestamp) => {
-    if (!gameState.started || !gameState.gameIsOver) return;
+    if (!gameState.started || gameState.gameIsOver || !animationActive) {
+      return;
+    }
 
     if (timestamp - lastUpdateTimestamp.current >= gameState.fallSpeed) {
       lastUpdateTimestamp.current = timestamp;
@@ -12,7 +16,14 @@ const startAnimation = (dispatch, gameState, lastUpdateTimestamp) => {
     requestAnimationFrame(animate);
   };
 
-  return animate;
+  return () => {
+    animationActive = true;
+    requestAnimationFrame(animate);
+  };
 };
 
-export default startAnimation;
+const stopAnimation = () => {
+  animationActive = false;
+};
+
+export { startAnimation, stopAnimation };

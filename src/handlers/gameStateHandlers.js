@@ -1,5 +1,5 @@
 import { speedMap } from '../gameUtils/gameUtils';
-import startAnimation from './animationHandlers';
+import { startAnimation, stopAnimation } from './animationHandlers';
 
 const handleGameState = (
   dispatch,
@@ -13,18 +13,20 @@ const handleGameState = (
   } = gameState;
 
   const animate = startAnimation(dispatch, gameState, lastUpdateTimestamp);
-  const currentScore = score;
-  let requestId;
 
-  if (speedMap[currentScore] && fallSpeed !== speedMap[currentScore]) {
-    dispatchSetFallSpeed(speedMap[currentScore]);
+  if (speedMap[score] && fallSpeed !== speedMap[score]) {
+    dispatchSetFallSpeed(speedMap[score]);
   }
 
-  if (started) requestId = requestAnimationFrame(animate);
+  if (started && !gameIsOver) {
+    animate(); // Запуск анимации
+  } else {
+    stopAnimation(); // Остановка анимации
+  }
 
-  if (gameIsOver) setShowGameOverModal(true);
-
-  return () => cancelAnimationFrame(requestId);
+  if (gameIsOver) {
+    setShowGameOverModal(true);
+  }
 };
 
 export default handleGameState;

@@ -33,9 +33,13 @@ const Tetris = () => {
         showNickNameModal={showNickNameModal}
         setShowNickNameModal={setShowNickNameModal}
       />
-      <Header />
-      <ScoreDisplay score={score} started={started} dispatch={dispatch} />
       <div className="game-content">
+        <div className="header-container">
+          <div className="header-content">
+            <Header />
+            <ScoreDisplay score={score} started={started} dispatch={dispatch} />
+          </div>
+        </div>
         <GameBoardContainer gameState={gameState} />
         {gameState.gameIsOver && (
         <GameOverModalContainer

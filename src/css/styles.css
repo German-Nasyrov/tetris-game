@@ -8,7 +8,8 @@ body {
 .main-container {
   background-image: url("../img/background.png");
   background-size: contain;
-  height: 100vh;
+  min-height: 100vh;
+  align-content: center;
 }
 
 .header {
@@ -70,7 +71,7 @@ body {
   width: 2rem;
   height: 2rem;
   background-color: transparent;
-  border: 0,0625rem solid #555;
+  border: 0.0625rem solid #555;
   box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.5);
 }
 
@@ -82,9 +83,9 @@ body {
 .start-button {
   background-color: #0074D9;
   color: #FFF;
-  font-size: px;
+  font-size: 1.5rem;
   border: none;
-  padding: 0.625rem 1.5rem;
+  padding: 0.625rem 1.25rem;
   margin-left: 1rem;
   cursor: pointer;
 }
@@ -209,17 +210,31 @@ label {
   justify-content: center;
   align-items: flex-start;
   gap: 2rem;
-  margin-top: 2rem;
 }
 
 .score-desk {
-  background-color: #f0f0f0;
+  background-color: #ffffffb8;
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 200px;
+  min-width: 220px;
   min-height: 200px;
   margin-top: 2rem;
+}
+
+.header-container {
+  display: flex;
+  justify-content: center;
+}
+
+.header-content {
+  background-color: #ffffffb8;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  min-height: 150px;
+  margin-top: 2rem;
+  width: 220px;
 }
 
 .score-entry {
@@ -241,7 +256,277 @@ label {
 }
 
 .players-score {
-  font-size: 1 rem;
+  font-size: 1rem;
   color: #333;
   font-weight: 100;
+}
+
+@media (max-width: 600px) {
+  .header h1 {
+    font-size: 1.25rem;
+  }
+  .header p {
+    font-size: 0.875rem;
+  }
+  .game-board {
+    grid-template-columns: repeat(10, 1.5rem);
+    grid-template-rows: repeat(20, 1.5rem);
+    grid-gap: 0.03125rem;
+  }
+  .cell, .piece-cell {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .modal {
+    width: 18rem;
+    height: 12rem;
+  }
+  .modal button {
+    font-size: 1.25rem;
+  }
+  .score-desk, .header-content {
+    min-height: 150px;
+  }
+  .nickname-value {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  .header p {
+    font-size: 1rem;
+  }
+  .game-board {
+    grid-template-columns: repeat(10, 1.75rem);
+    grid-template-rows: repeat(20, 1.75rem);
+    grid-gap: 0.03125rem;
+  }
+  .cell, .piece-cell {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  .modal {
+    width: 22rem;
+    height: 16rem;
+    font-size: 1.375rem;
+  }
+  .score-desk, .header-content {
+    min-height: 180px;
+  }
+  .nickname-value {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .header h1 {
+    font-size: 1.75rem;
+  }
+  .header p {
+    font-size: 1.125rem;
+  }
+  .game-board {
+    grid-template-columns: repeat(10, 2.5rem);
+    grid-template-rows: repeat(20, 2.5rem);
+    grid-gap: 0.0625rem;
+  }
+  .cell, .piece-cell {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .modal {
+    width: 25rem;
+    height: 18rem;
+  }
+  .modal button {
+    font-size: 1.625rem;
+  }
+  .score-desk, .header-content {
+    min-height: 220px;
+  }
+  .nickname-value {
+    font-size: 1.125rem;
+  }
+  .start-button {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 600px) {
+  font-size: 1.25rem;
+  margin: 1rem auto;
+  max-width: 150px;
+}
+
+@media (min-width: 901px) and (min-width: 601px) and (max-width: 900px) {
+  font-size: 1.375rem;
+  margin: 1rem auto;
+  max-width: 175px;
+}
+
+@media (min-width: 901px) and (min-width: 901px) {
+  font-size: 1.5rem;
+  margin: 1rem auto;
+  max-width: 200px;
+}
+
+@media (max-width: 991px) {
+  .game-content {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .score-desk {
+    margin-top: 1rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .score-desk {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .score-desk {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .header-content {
+    margin-top: 1rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .header-content {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .header-content {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .nickname {
+    width: 100%;
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .nickname {
+    width: 100%;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .nickname {
+    width: 100%;
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .modal-block {
+    width: 90%;
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .modal-block {
+    width: 85%;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .modal-block {
+    width: 80%;
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .error-text {
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .error-text {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .error-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .scores {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .scores {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .scores {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .players-score {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .players-score {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .players-score {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .score {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .score {
+    font-size: 1.375rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .score {
+    font-size: 1.5rem;
+  }
 }
